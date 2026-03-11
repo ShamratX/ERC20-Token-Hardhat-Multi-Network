@@ -108,7 +108,8 @@ If Ethereum networks are added:
 
 Example ⁠ .env ⁠:
 
-⁠ env
+⁠env
+---
 PRIVATE_KEY=0xYourPrivateKeyHere
 BSC_TESTNET_RPC=https://bsc-testnet.publicnode.com
 BSC_MAINNET_RPC=https://bsc-dataseed.binance.org
@@ -136,13 +137,6 @@ cache/
 # Test
 
 Run the full test suite:
-
-⁠ bash
-npm run test
- ⁠
-
-or
-
 ⁠ bash
 npx hardhat test
  ⁠
@@ -182,7 +176,7 @@ gasReporter: {
 Run tests normally:
 
 ⁠ bash
-npm run test
+npm hardhat test
  ⁠
 
 Or with gas reporting:
@@ -195,16 +189,26 @@ REPORT_GAS=true npx hardhat test
 
 # Deploy
 
-Example ⁠ package.json ⁠ script:
-
-⁠ json
-"scripts": {
-  "deploy": "hardhat run scripts/deploy.js --network bscTestnet"
-}
+Deploy to *ETH Testnet*:
+---
+ bash
+npm run deploy
  ⁠
 
-Deploy to *BSC Testnet*:
+or
 
+⁠ bash
+npx hardhat run scripts/deploy.js --network sepolia
+ ⁠
+
+Deploy to *BSC Mainnet*:
+
+⁠ bash
+npx hardhat run scripts/deploy.js --network mainnet
+
+
+Deploy to *BSC Testnet*:
+---
 ⁠ bash
 npm run deploy
  ⁠
@@ -239,9 +243,11 @@ npx hardhat run scripts/deploy.js --network localhost
 
 The deploy script logs:
 
-•⁠  ⁠deployer address
-•⁠  ⁠account balance
-•⁠  ⁠deployed contract address
+•⁠  ⁠Network name + ChainId
+•⁠  Deployer wallet address
+•⁠  Contract address
+•⁠  ⁠Deployment transaction hash 
+•⁠  ⁠Token total supply
 
 ---
 
