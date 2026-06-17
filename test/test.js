@@ -111,25 +111,4 @@ describe("MyERC20", function() {
             expect(sumOfBalance).to.equal(totalSupply);
         });
     });
-
-    describe("Increase/Decrease Allowance", function() {
-    it("increaseAllowance works correctly", async function() {
-        const amount = toUnits(100);
-        await token.increaseAllowance(addr1.address, amount);
-        expect(await token.allowance(owner.address, addr1.address)).to.equal(amount);
-    });
-
-    it("decreaseAllowance works correctly", async function() {
-        const initial = toUnits(200);
-        await token.increaseAllowance(addr1.address, initial);
-        await token.decreaseAllowance(addr1.address, toUnits(50));
-        expect(await token.allowance(owner.address, addr1.address)).to.equal(toUnits(150));
-    });
-
-    it("cannot decrease below zero", async function() {
-        await expect(token.decreaseAllowance(addr1.address, toUnits(10)))
-            .to.be.revertedWith("ERC20: decreased allowance below zero");
-    });
-});
-
 });

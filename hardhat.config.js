@@ -24,10 +24,12 @@ module.exports = {
     hardhat: {},
     sepolia: {
       url: ETH_SEPOLIA_RPC_URL || "",
+      chainId: 1115511,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
     },
     mainnet: {
       url: ETH_MAINNET_RPC_URL || "",
+      chainId: 1,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
     },
     bscTestnet: {
@@ -49,7 +51,7 @@ module.exports = {
   },
 
   etherscan: {
-  apiKey: process.env.ETHERSCAN_API_KEY || "",  // Ethereum mainnet + Sepolia
+  apiKey: ETHERSCAN_API_KEY || "",  // Ethereum mainnet + Sepolia
   // apiKey: process.env.BSCSCAN_API_KEY || "",      // BSC mainnet + testnet
   
 }

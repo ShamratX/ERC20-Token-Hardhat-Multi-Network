@@ -1,17 +1,18 @@
 const hre = require("hardhat");
-const { ethers } = hre;
-
+const { ethers, network } = hre;
 
 const main = async() => {
     try {
-        const { ethers, network } = hre;
-
         const [deployer] = await ethers.getSigners();
 
         const { chainId } = await deployer.provider.getNetwork();
 
         console.log(`Network: ${network.name} (ChainId ${chainId})`);
         console.log(`Deployer: ${deployer.address}`);
+
+        const getBalance = await deployer.provider.getBalance(deployer.address);
+        const balanceFormatted = ethers.formatEther(getBalance);
+        console.log(`Deployer Balance ${balanceFormatted} ETH`);
 
         const MyERC20 = await ethers.getContractFactory("MyERC20", deployer);
         const token = await MyERC20.deploy();
