@@ -27,18 +27,5 @@ contract MyERC20 is ERC20, Ownable {
         _mint(msg.sender, INITIAL_SUPPLY);
     }
 
-    /// @notice Increase spender allowance safely
-    function increaseAllowance(address spender, uint256 addedValue) public returns (bool) {
-        _approve(_msgSender(), spender, allowance(_msgSender(), spender) + addedValue);
-        return true;
-    }
-
-    /// @notice Decrease spender allowance safely
-    function decreaseAllowance(address spender, uint256 subtractedValue) public returns (bool) {
-        uint256 currentAllowance = allowance(_msgSender(), spender);
-        require(currentAllowance >= subtractedValue, "ERC20: decreased allowance below zero");
-        _approve(_msgSender(), spender, currentAllowance - subtractedValue);
-        return true;
-    }
 
 }

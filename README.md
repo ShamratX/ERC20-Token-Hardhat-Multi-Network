@@ -4,9 +4,10 @@ A fully tested ERC20 token smart contract built with Hardhat, supporting multi-n
 
 
 Features:
-- ERC20 Standard: transfer, approve, allowance, balanceOf
+- Standard ERC20 (OpenZeppelin): transfer, approve, allowance, transferFrom, balanceOf
 - Ownable: transferOwnership, renounceOwnership
-- Fixed supply, no mint/burn/pause
+- Fixed supply minted once in the constructor; no mint/burn/pause after deployment
+- No custom `increaseAllowance` or `decreaseAllowance` helpers
 - Multi-network deploy (Ethereum + BSC)
 
 
@@ -34,7 +35,7 @@ npm -v
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ⁠ contracts/MyERC20.sol ⁠ | ERC20 token contract (OpenZeppelin ERC20 + Ownable)                                                                                                  |
 | ⁠ scripts/deploy.js ⁠        | Deployment script; deploys MyERC20 using Hardhat Test                                                                                           |
-| ⁠ test.js ⁠  | Mocha/Chai tests: deployment, transfers, approve/allowance, edge cases                                                                               |
+| ⁠ test/test.js ⁠  | Mocha/Chai tests: deployment, transfers, approve/transferFrom, edge cases                                                                               |
 | ⁠ hardhat.config.js ⁠        | Hardhat config: networks (Hardhat, BSC Testnet, BSC Mainnet; Ethereum Sepolia/mainnet can be added), Solidity 0.8.28, optimizer, BSCScan / Etherscan |
 | ⁠ package.json ⁠             | Project metadata, scripts (⁠ test ⁠, ⁠ deploy ⁠), dependency list                                                                                        |
 | ⁠ package-lock.json ⁠        | Locked dependency versions for reproducible installs                                                                                                 |
@@ -151,7 +152,7 @@ They cover:
 
 •⁠  ⁠deployment
 •⁠  ⁠token transfers
-•⁠  ⁠approve / allowance
+•⁠  ⁠approve / transferFrom
 •⁠  ⁠supply invariants
 
 ---
@@ -322,6 +323,7 @@ MyERC20 has *no constructor arguments*, so no extra parameters are needed.
   * no pause
   * no blacklist
   * no transaction fees
+  * no custom allowance helpers (`increaseAllowance` / `decreaseAllowance`)
 
 •⁠  ⁠This project *has not been formally audited* by a third-party security firm.
 
