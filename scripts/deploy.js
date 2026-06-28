@@ -29,7 +29,9 @@ const main = async() => {
         console.log(`Contract Address: ${contractAddress}`);
         console.log(`Deployment tx Hash: ${txHash}`);   
         console.log(`Total Supply: ${totalSupplyFormated}`);
-        
+
+        console.log("\nVerify Command:");
+        console.log(`npx hardhat verify --network ${network.name} ${contractAddress}`);
 
     } catch(error) {
         console.error("Deployment failed:", error);

@@ -22,10 +22,10 @@ Features:
 
 Check versions:
 
-⁠ bash
+```bash
 node -v
 npm -v
- ⁠
+```
 
 ---
 
@@ -34,12 +34,13 @@ npm -v
 | Path                       | Purpose                                                                                                                                              |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ⁠ contracts/MyERC20.sol ⁠ | ERC20 token contract (OpenZeppelin ERC20 + Ownable)                                                                                                  |
-| ⁠ scripts/deploy.js ⁠        | Deployment script; deploys MyERC20 using Hardhat Test                                                                                           |
+| ⁠ scripts/deploy.js ⁠        | Deployment script; deploys MyERC20 and prints a ready-to-run verify command                                                                           |
 | ⁠ test/test.js ⁠  | Mocha/Chai tests: deployment, transfers, approve/transferFrom, edge cases                                                                               |
-| ⁠ hardhat.config.js ⁠        | Hardhat config: networks (Hardhat, BSC Testnet, BSC Mainnet; Ethereum Sepolia/mainnet can be added), Solidity 0.8.28, optimizer, BSCScan / Etherscan |
-| ⁠ package.json ⁠             | Project metadata, scripts (⁠ test ⁠, ⁠ deploy ⁠), dependency list                                                                                        |
+| ⁠ hardhat.config.js ⁠        | Hardhat config: networks (Hardhat, Sepolia, Mainnet, BSC Testnet, BSC Mainnet), Solidity 0.8.30, optimizer, Etherscan |
+| ⁠ package.json ⁠             | Project metadata and dependency list                                                                                        |
 | ⁠ package-lock.json ⁠        | Locked dependency versions for reproducible installs                                                                                                 |
-| ⁠ .env ⁠                     | Local env vars (private key, RPC URLs, BSCScan/Etherscan API keys). Not committed; see ⁠ .gitignore ⁠                                                  |
+| ⁠ .env.example ⁠             | Template for required environment variables                                                                                                            |
+| ⁠ .env ⁠                     | Local env vars (private key, RPC URLs, API keys). Not committed; copy from ⁠ .env.example ⁠                                                  |
 | ⁠ .gitignore ⁠               | Ignores ⁠ node_modules ⁠, ⁠ .env ⁠, ⁠ cache ⁠, ⁠ artifacts ⁠, coverage, etc.                                                                                 |
 
 ---
@@ -65,66 +66,58 @@ You do not install these individually. A single install step installs everything
 
 ### 1. Clone and enter the project
 
-⁠ bash
-git clone <your-repo-url> My_ERC20
-cd My_ERC20
- ⁠
+```bash
+git clone <your-repo-url> MyERC20-Token
+cd MyERC20-Token
+```
 
 ---
 
 ### 2. Install all dependencies
 
-⁠ bash
+```bash
 npm install
- ⁠
+```
 
 This installs both dependencies and devDependencies from ⁠ package.json ⁠.
 
 For reproducible installs (recommended for CI):
 
-⁠ bash
+```bash
 npm ci
- ⁠
+```
 
 ---
 
 # Environment Variables
 
-Create a ⁠ .env ⁠ file in the project root.
+Copy the example file and fill in your values:
 
-| Variable          | Required | Description                                             |
-| ----------------- | -------- | ------------------------------------------------------- |
-| ⁠ PRIVATE_KEY ⁠     | Yes      | Deployer wallet private key (*include the 0x prefix*) |
-| ⁠ BSC_TESTNET_RPC ⁠ | Yes      | BSC Testnet RPC URL                                     |
-| ⁠ BSC_MAINNET_RPC ⁠ | Optional | BSC Mainnet RPC URL                                     |
-| ⁠ BSCSCAN_API_KEY ⁠ | Optional | BSCScan API key for contract verification               |
+```bash
+cp .env.example .env
+```
 
-If Ethereum networks are added:
+| Variable               | Required | Description                                             |
+| ---------------------- | -------- | ------------------------------------------------------- |
+| ⁠ PRIVATE_KEY ⁠          | Yes      | Deployer wallet private key (*include the 0x prefix*) |
+| ⁠ ETH_SEPOLIA_RPC_URL ⁠  | Yes*     | Ethereum Sepolia RPC URL                                |
+| ⁠ ETH_MAINNET_RPC_URL ⁠  | Optional | Ethereum Mainnet RPC URL                                |
+| ⁠ BSC_TESTNET_RPC_URL ⁠  | Yes*     | BSC Testnet RPC URL                                     |
+| ⁠ BSC_MAINNET_RPC_URL ⁠  | Optional | BSC Mainnet RPC URL                                     |
+| ⁠ ETHERSCAN_API_KEY ⁠    | Optional | Etherscan API key for Ethereum contract verification    |
+| ⁠ BSCSCAN_API_KEY ⁠      | Optional | BSCScan API key for BSC contract verification           |
 
-| Variable            | Required | Description          |
-| ------------------- | -------- | -------------------- |
-| ⁠ SEPOLIA_RPC_URL ⁠   | Optional | Ethereum Sepolia RPC |
-| ⁠ MAINNET_RPC_URL ⁠   | Optional | Ethereum Mainnet RPC |
-| ⁠ ETHERSCAN_API_KEY ⁠ | Optional | Etherscan API key    |
+\*Required only for the network you plan to deploy to.
 
-Example ⁠ .env ⁠:
-
-⁠env
----
-PRIVATE_KEY=0xYourPrivateKeyHere
-BSC_TESTNET_RPC=https://bsc-testnet.publicnode.com
-BSC_MAINNET_RPC=https://bsc-dataseed.binance.org
-BSCSCAN_API_KEY=YourBscScanApiKey
-ETHERSCAN_API_KEY=YourEtherscanApiKey
- ⁠
+See ⁠ .env.example ⁠ for placeholder values.
 
 ---
 
 # Compile
 
-⁠ bash
+```bash
 npx hardhat compile
- ⁠
+```
 
 Artifacts will be generated in:
 
@@ -138,9 +131,10 @@ cache/
 # Test
 
 Run the full test suite:
-⁠ bash
+
+```bash
 npx hardhat test
- ⁠
+```
 
 Tests are located in:
 
@@ -159,72 +153,41 @@ They cover:
 
 # Run Tests with Gas Report
 
-Enable the plugin in ⁠ hardhat.config.js ⁠:
+`hardhat-gas-reporter` is already enabled in ⁠ hardhat.config.js ⁠. Run:
 
-⁠ javascript
-require("hardhat-gas-reporter");
- ⁠
+```bash
+npx hardhat test
+```
 
-Add configuration:
-
-⁠ javascript
-gasReporter: {
-  enabled: process.env.REPORT_GAS === "true",
-  currency: "USD"
-}
- ⁠
-
-Run tests normally:
-
-⁠ bash
-npm hardhat test
- ⁠
-
-Or with gas reporting:
-
-⁠ bash
-REPORT_GAS=true npx hardhat test
- ⁠
+Gas usage is printed automatically after the test run.
 
 ---
 
 # Deploy
 
-Deploy to *ETH Testnet*:
----
- bash
-npm run deploy
- ⁠
+Deploy to *Ethereum Sepolia*:
 
-or
-
-⁠ bash
+```bash
 npx hardhat run scripts/deploy.js --network sepolia
- ⁠
+```
 
-Deploy to *BSC Mainnet*:
+Deploy to *Ethereum Mainnet*:
 
-⁠ bash
+```bash
 npx hardhat run scripts/deploy.js --network mainnet
-
+```
 
 Deploy to *BSC Testnet*:
----
-⁠ bash
-npm run deploy
- ⁠
 
-or
-
-⁠ bash
+```bash
 npx hardhat run scripts/deploy.js --network bscTestnet
- ⁠
+```
 
 Deploy to *BSC Mainnet*:
 
-⁠ bash
-npx hardhat run scripts/deploy.js --network bscMainnet
- ⁠
+```bash
+npx hardhat run scripts/deploy.js --network bsc
+```
 
 ---
 
@@ -232,23 +195,28 @@ npx hardhat run scripts/deploy.js --network bscMainnet
 
 Start a node:
 
-⁠ bash
+```bash
 npx hardhat node
- ⁠
+```
 
 Then deploy in another terminal:
 
-⁠ bash
+```bash
 npx hardhat run scripts/deploy.js --network localhost
- ⁠
+```
 
 The deploy script logs:
 
 •⁠  ⁠Network name + ChainId
-•⁠  Deployer wallet address
-•⁠  Contract address
-•⁠  ⁠Deployment transaction hash 
+•⁠  ⁠Deployer wallet address and balance
+•⁠  ⁠Contract address
+•⁠  ⁠Deployment transaction hash
 •⁠  ⁠Token total supply
+•⁠  ⁠A ready-to-copy verify command, for example:
+
+```bash
+npx hardhat verify --network sepolia 0xYourDeployedContractAddress
+```
 
 ---
 
@@ -274,39 +242,39 @@ BSCSCAN_API_KEY=YourApiKey
 
 ### Step 3 — Verify
 
+After deployment, the deploy script prints a verify command you can copy. Or run manually:
+
 BSC Testnet:
 
-⁠ bash
+```bash
 npx hardhat verify --network bscTestnet DEPLOYED_CONTRACT_ADDRESS
- ⁠
+```
 
 Example:
 
-⁠ bash
+```bash
 npx hardhat verify --network bscTestnet 0x1234567890abcde5nh5j45336mn65mn566m56b
- ⁠
+```
 
 BSC Mainnet:
 
-⁠ bash
-npx hardhat verify --network bscMainnet DEPLOYED_CONTRACT_ADDRESS
- ⁠
+```bash
+npx hardhat verify --network bsc DEPLOYED_CONTRACT_ADDRESS
+```
 
 ---
 
 # Verify on Etherscan (Ethereum)
 
-If Ethereum networks are configured in ⁠ hardhat.config.js ⁠:
-
-⁠ bash
+```bash
 npx hardhat verify --network sepolia DEPLOYED_CONTRACT_ADDRESS
- ⁠
+```
 
 or
 
-⁠ bash
+```bash
 npx hardhat verify --network mainnet DEPLOYED_CONTRACT_ADDRESS
- ⁠
+```
 
 MyERC20 has *no constructor arguments*, so no extra parameters are needed.
 
